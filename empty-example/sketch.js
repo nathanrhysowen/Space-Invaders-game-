@@ -3,6 +3,7 @@ let lasers = []; //creates array for lasers//
 let enemies = []; // creates array for enemies// 
 let stage = 0; 
 let font;
+let button;
 
 
 
@@ -44,6 +45,7 @@ function draw() {
   }
   
   
+  
 }
 
 
@@ -71,7 +73,10 @@ text('SPACE INVADERS', 65, 100);
 
 fill(255,0,0);
 textSize(30);
-text('PLAY GAME', 220, 280);
+text('CLICK THE SCREEN', 175, 280);
+text('TO PLAY GAME',200,310);
+
+
 
 strokeWeight(5);
 fill(255,0,0);
@@ -92,7 +97,10 @@ noFill()
 stroke(255,0,0);
 strokeWeight(3);
 
-rect(305,270,200,50);
+if mouseIsPressed == true){
+  stage = 1;
+}
+
 
 
 }
