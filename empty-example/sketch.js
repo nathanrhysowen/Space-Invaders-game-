@@ -1,7 +1,7 @@
-let points = 0;
-let lasers = []; //creates array for lasers//
-let enemies = []; // creates array for level 1 enemies// 
-let enemies2 = []; // creates array for level 2 enemies
+let points = 0; 
+let lasers = []; 
+let enemies = []; 
+let enemies2 = []; 
 let stage = 0; 
 let font;
 level2points = 10;
@@ -18,7 +18,7 @@ let enemymodel2;
 let bonuspoints = 16;
 
 
-
+//preloading sounds, images and fonts//
 function preload(){
  
 lasersound = loadSound("Sounds/lasersound.wav");
@@ -82,6 +82,8 @@ function setup() {
 
 
 function draw() {
+ 
+ //allowing level progression using if statements//
   if (stage == 0){
 
     titlescreen();
@@ -108,7 +110,7 @@ function draw() {
   }
   
   
-  
+  //playing stage music and stopping the previous stage music//
   if (stage == 0){
     if(!menumusic.isPlaying()){
 
@@ -148,7 +150,7 @@ function draw() {
 
 function titlescreen(){
 
-background(0);
+background(0);  //background set to black//
 //red border//
 stroke(255,0,0);
 noFill()
@@ -162,9 +164,9 @@ textSize(40);
 textFont(font);
 text('SPACE INVADERS', 20, 100);
 
-
+//making the text blink and controlling the speed of which it blinks//
 i = i + 1;
-if (frameCount % 70<30){
+if (frameCount % 70<30){  
   fill (50);
   textSize(35);
   text('CLICK THE SCREEN', 20, 280);
@@ -176,16 +178,6 @@ else{
   text('CLICK THE SCREEN', 20, 280);
   text('TO PLAY GAME',100,320);
 }
-//fill(255,0,0);
-//textSize(30);
-//text('CLICK THE SCREEN', 70, 280);
-//text('TO PLAY GAME',130,320);
-
-
-
-strokeWeight(5);
-fill(255,0,0);
-line(180,300,260,300);
 
 
 fill(255,0,0);
@@ -202,7 +194,8 @@ noFill()
 stroke(255,0,0);
 strokeWeight(3);
 
-if (mouseIsPressed == true){
+//if the mouse is clikced, the game will begin//
+if (mouseIsPressed == true){    
   stage = 1;
 }
 
@@ -228,6 +221,7 @@ function level1(){
   strokeWeight(10);
   rect(width/2, height/2, width, height);
   
+  //levell 1 text//
   noStroke();
   fill(255);
   textSize(20);
@@ -235,30 +229,30 @@ function level1(){
   text('Level: 1', 220,50);
   fill(255,0,0);
   
-  image(playermodel,mouseX,550,60,50); //creating the player//
+  image(playermodel,mouseX,550,60,50); //creating the player and allowing it to track the mouse along the X axis//
   
   for(let laser of lasers){ //grabs laser from the array//
     fill(255);
     noStroke();
-    rect(laser.x -30,laser.y,4,30) //creating the laser object//
+    rect(laser.x -30,laser.y,4,30) //creating the laser object as a white rectangle//
     laser.y -= 12; //speed of which the laser moves//
   }
 
   for(let enemy of enemies){ //pulls enemies from array//
-    enemy.y += 1; //speed of which the enemies are falling//
+    enemy.y += 1; //speed of which the enemies are falling down the Y axis //
     fill(255,0,0);
     noStroke();
     
-    image(enemymodel,enemy.x -20,enemy.y,50,50)
+    image(enemymodel,enemy.x -20,enemy.y,50,50) //creating the enemy models and positioning them above the screen. (placing the image 20 to the left due to an error with the image collisions being too far to the left)//
    
     
-   // ellipse(enemy.x + 15,enemy.y + 15,20,20) //enemy shape//
-    
+  
+    //if enemy reaches bottom of screen, game ends and death screen appears//
      if (enemy.y > height){
       fill(255,0,0);
       noStroke();
       strokeWeight(5)
-      text("GAME OVER", 200, 300); //if enemy reaches bottom of screen, game loop ends and death screen appears//
+      text("GAME OVER", 200, 300); 
       
      }
 
@@ -272,10 +266,10 @@ function level1(){
   for (let enemy of enemies){
     for(let laser of lasers){
       if(dist(enemy.x,enemy.y,laser.x,laser.y) < 20){
-         enemies.splice(enemies.indexOf(enemy), 1); //when lasers and enemies collide, the objexts dissappear//
-         lasers.splice(lasers.indexOf(laser), 1)
+         enemies.splice(enemies.indexOf(enemy), 1); 
+         lasers.splice(lasers.indexOf(laser), 1) //when the distance between the enemy x and y and the lasers x and y is less that 20, enemies are removed from the array//
           points +=1; //adds one point//
-          explosion.play();
+          explosion.play(); //explosion sound effect//
           
         
       }
@@ -296,31 +290,31 @@ function level1(){
 
 
 function mousePressed(){
- //defining the location where the lasers spawn//
+ //defines the laser spawn location as the mouse's X axis //
   let laser = {
     x: mouseX + 30,
     y: 510,
     
   }
   lasers.push(laser); 
-  lasersound.play();
+  lasersound.play(); //laser sound//
 }
 
 
 
-// if the points are greater than 10, stage 2 begins//
+// point system//
 function pointsystem(){
    textSize(30);
    textFont(font);
    text(points,25,50);
-   if (points >= 6){
+   if (points >= 6){   //if points reach 6, level 2 begins//
     stage = 2;}
 
-   if (points >=16){
+   if (points >=16){  //if points reach 16, the win screen appears//
      stage = 3; }
    } 
 
-   if (points >=22){
+   if (points >=22){ //if points reach 22, the thanks for playing screen appears//
      stage == 5;
    }
    
@@ -357,12 +351,12 @@ function level2(){
     fill(255,0,0);
     noStroke();
     
-    image(enemymodel2,enemy2.x -20,enemy2.y,50,50)
+    image(enemymodel2,enemy2.x -20,enemy2.y,50,50) //defining the second levels enemies location and playermodel//
     if (enemy2.y > height){
      fill(255,0,0);
      noStroke();
      strokeWeight(5)
-     text("GAME OVER", 200, 300); //if enemy reaches bottom of screen, game loop ends and death screen appears//
+     text("GAME OVER", 200, 300); //if enemy reaches bottom of screen, game ends and death screen appears//
       
      }
 
@@ -373,8 +367,8 @@ function level2(){
    //collision detection//
   for (let enemy2 of enemies2){
     for(let laser of lasers){
-      if(dist(enemy2.x,enemy2.y,laser.x,laser.y) < 20){
-         enemies2.splice(enemies2.indexOf(enemy2), 1); //when lasers and enemies collide, the objexts dissappear//
+      if(dist(enemy2.x,enemy2.y,laser.x,laser.y) < 20){ //when the distance between the enemies and lasers x and y axis are less than 20, enemies and lasers are removed from array//
+         enemies2.splice(enemies2.indexOf(enemy2), 1); 
          lasers.splice(lasers.indexOf(laser), 1)
           points +=1; //adds one point//
           explosion.play();
@@ -394,11 +388,10 @@ text(points,25,50);
 
 }
 
-
+//win screen//
 function winscreen(){
-  background(26, 255, 0);
+  background(26, 255, 0);  //background green 
 
-  points = 16;
 
   fill(255);
   textFont(font);
@@ -408,7 +401,7 @@ function winscreen(){
   
  
   i = i + 1;
-  if (frameCount % 70<30){
+  if (frameCount % 70<30){  //making the text blink using framecount//
     fill (50);
     textFont(font);
     textSize(30);
@@ -422,7 +415,7 @@ function winscreen(){
     text('YOU WIN!',180,300); }
   
 
- if (mouseIsPressed == true){
+ if (mouseIsPressed == true){  //if the mouse is pressed, proceed to the bonuns level//
   stage = 4;
  }
 
@@ -434,7 +427,7 @@ function bonuslevel(){
   background(0);
   
   
-
+//red border//
   stroke(255,0,0);
   noFill()
   strokeWeight(10);
@@ -446,12 +439,12 @@ function bonuslevel(){
   textFont(font);
   text('Bonus Level', 190,50);
   fill(255,0,0);
-  image(playermodel,mouseX + 30,550,60,50); //creating the player//
+  image(playermodel,mouseX + 30,550,60,50); //creating the player and allowing it to follow the mouse along the x-axis //
   for(let laser of lasers){ //grabs laser from the array//
     fill(255);
     noStroke();
-    rect(laser.x,laser.y,4,30) //creating the laser object//
-    laser.y -= 12; //speed of which the laser moves//
+    rect(laser.x,laser.y,4,30) //creating the laser object as a white rectangle//
+    laser.y -= 12; //speed of which the laser moves up the y-axis//
   }
 
   for(let cat of cats){ //pulls enemies from array//
@@ -459,8 +452,8 @@ function bonuslevel(){
     
     fill(255,0,0);
     noStroke();
-    image(catmodel,cat.x,cat.y,50,50) //enemy shape//
-    if (cat.y > height){
+    image(catmodel,cat.x,cat.y,50,50) //defining enemy model and x and y//
+    if (cat.y > height){  //if enemies reach bottom, the thanks for playing screen appears//
      stage = 5; }
 
   textSize(30);
@@ -474,11 +467,11 @@ function bonuslevel(){
    //collision detection//
   for (let cat of cats){
     for(let laser of lasers){
-      if(dist(cat.x,cat.y,laser.x,laser.y) < 10){
-         cats.splice(cats.indexOf(cat), 1); //when lasers and enemies collide, the objexts dissappear//
-         cats.splice(lasers.indexOf(laser), 1)
+      if(dist(cat.x,cat.y,laser.x,laser.y) < 10){//if distance between lasers and cats is less than 10, objects will be removed from array//
+         cats.splice(cats.indexOf(cat), 1); 
+         lasers.splice(lasers.indexOf(laser), 1)
           bonuspoints +=1; //adds one point//
-          explosion.play();
+          explosion.play(); //explosion sound//
 
           if(bonuspoints >=21){
             stage = 5;
@@ -496,7 +489,7 @@ function bonuslevel(){
 
 function thanksforplaying(){
   background(0);
-
+//allowing text to blink using framecount//
   i = i + 1;
   if (frameCount % 70<30){
     fill (50);
