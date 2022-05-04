@@ -1,8 +1,8 @@
 let points = 0;
 let lasers = []; //creates array for lasers//
-let enemies = []; // creates array for enemies// 
-let enemies2 = [];
-let stage = 2; 
+let enemies = []; // creates array for level 1 enemies// 
+let enemies2 = []; // creates array for level 2 enemies
+let stage = 0; 
 let font;
 level2points = 10;
 let lasersound;
@@ -15,6 +15,7 @@ let enemymodel;
 let cats = [];
 let hitboxes = []
 let enemymodel2;
+let bonuspoints = 16;
 
 
 
@@ -25,10 +26,12 @@ font = loadFont('Sounds/PressStart2P-Regular.ttf');
 stage1music = loadSound("Sounds/Stage1music.mp3");
 stage2music = loadSound("Sounds/Stage2Music.mp3");
 menumusic = loadSound("Sounds/MenuMusic.mp3");
+explosion = loadSound("Sounds/explosion.mp3")
 playermodel = loadImage("Sounds/playermodel.png")
 enemymodel = loadImage("Sounds/enemymodel.png")
-cat = loadImage("Sounds/cat.png")
+catmodel = loadImage("Sounds/catmodel.png")
 enemymodel2 = loadImage("Sounds/enemymodellevel2.png")
+bonuslevelmusic = loadSound("Sounds/bonuslevelmusic.mp3")
 }
 
 
@@ -61,7 +64,7 @@ function setup() {
   }
 
 
-  for(let i = 0; i < 6; i++){
+  for(let i = 0; i < 6; i++){  //creating enemies for bonus level//
     let cat = {
       x: random(0, 550),
       y: random(-400,0)
@@ -69,9 +72,10 @@ function setup() {
     cats.push(cat);
   }
 
+ 
   
   
-    }
+}
 
     
     
@@ -92,7 +96,15 @@ function draw() {
   }
 
   if (stage == 3){
+    winscreen();
+  }
+
+  if (stage == 4){
     bonuslevel();
+  }
+
+  if (stage == 5){
+    thanksforplaying();
   }
   
   
@@ -116,6 +128,13 @@ function draw() {
     if(!stage2music.isPlaying()){
       stage2music.play();
       stage1music.stop();
+    }
+  }
+
+  if(stage == 4){
+    if(!bonuslevelmusic.isPlaying()){
+      bonuslevelmusic.play();
+      stage2music.stop();
     }
   }
 }
@@ -256,6 +275,9 @@ function level1(){
          enemies.splice(enemies.indexOf(enemy), 1); //when lasers and enemies collide, the objexts dissappear//
          lasers.splice(lasers.indexOf(laser), 1)
           points +=1; //adds one point//
+          explosion.play();
+          
+        
       }
     }
   }
@@ -292,11 +314,17 @@ function pointsystem(){
    textFont(font);
    text(points,25,50);
    if (points >= 6){
-    stage = 2;
-    
-    
-  }
- }
+    stage = 2;}
+
+   if (points >=16){
+     stage = 3; }
+   } 
+
+   if (points >=22){
+     stage == 5;
+   }
+   
+ 
 
  
 
@@ -349,6 +377,7 @@ function level2(){
          enemies2.splice(enemies2.indexOf(enemy2), 1); //when lasers and enemies collide, the objexts dissappear//
          lasers.splice(lasers.indexOf(laser), 1)
           points +=1; //adds one point//
+          explosion.play();
       }
     }
   }
@@ -361,15 +390,50 @@ function level2(){
 textSize(30);
 textFont(font);
 text(points,25,50);
-if (level2points >= 16){
- stage == 3;
  
+
 }
+
+
+function winscreen(){
+  background(26, 255, 0);
+
+  points = 16;
+
+  fill(255);
+  textFont(font);
+  textSize(10);
+  text('(click to enter bonus level)', 160,320);
+    
+  
+ 
+  i = i + 1;
+  if (frameCount % 70<30){
+    fill (50);
+    textFont(font);
+    textSize(30);
+    text('YOU WIN!',180,300);
+  
 }
+  else{
+    fill(255)
+    textSize(30);
+    textFont(font);
+    text('YOU WIN!',180,300); }
+  
+
+ if (mouseIsPressed == true){
+  stage = 4;
+ }
+
+}
+
 
 
 function bonuslevel(){
   background(0);
+  
+  
 
   stroke(255,0,0);
   noFill()
@@ -382,7 +446,7 @@ function bonuslevel(){
   textFont(font);
   text('Bonus Level', 190,50);
   fill(255,0,0);
-  image(playermodel,mouseX,410,300,300); //creating the player//
+  image(playermodel,mouseX + 30,550,60,50); //creating the player//
   for(let laser of lasers){ //grabs laser from the array//
     fill(255);
     noStroke();
@@ -390,49 +454,65 @@ function bonuslevel(){
     laser.y -= 12; //speed of which the laser moves//
   }
 
-  for(let enemy2 of enemies2){ //pulls enemies from array//
-    enemy2.y += 1; //speed of which the enemies are falling//
+  for(let cat of cats){ //pulls enemies from array//
+    cat.y += 1; //speed of which the enemies are falling//
     
     fill(255,0,0);
     noStroke();
-    image(cat,enemy2.x,enemy2.y,300,300) //enemy shape//
-    if (enemy2.y > height){
-     fill(255,0,0);
-     noStroke();
-     strokeWeight(5)
-     text("GAME OVER", 200, 300); //if enemy reaches bottom of screen, game loop ends and death screen appears//
-      
-     }
+    image(catmodel,cat.x,cat.y,50,50) //enemy shape//
+    if (cat.y > height){
+     stage = 5; }
+
+  textSize(30);
+  textFont(font);
+  text(bonuspoints,25,50);
 
   
 
   }
 
    //collision detection//
-  for (let enemy2 of enemies2){
+  for (let cat of cats){
     for(let laser of lasers){
-      if(dist(enemy2.x,enemy2.y,laser.x,laser.y) < 10){
-         enemies2.splice(enemies2.indexOf(enemy2), 1); //when lasers and enemies collide, the objexts dissappear//
-         lasers.splice(lasers.indexOf(laser), 1)
-          points +=1; //adds one point//
+      if(dist(cat.x,cat.y,laser.x,laser.y) < 10){
+         cats.splice(cats.indexOf(cat), 1); //when lasers and enemies collide, the objexts dissappear//
+         cats.splice(lasers.indexOf(laser), 1)
+          bonuspoints +=1; //adds one point//
+          explosion.play();
+
+          if(bonuspoints >=21){
+            stage = 5;
+          }
+
+          
       }
     }
   }
   
     
-     pointsystem();
+     
+}
+
+
+function thanksforplaying(){
+  background(0);
+
+  i = i + 1;
+  if (frameCount % 70<30){
+    fill (50);
+    textFont(font);
+    textSize(15);
+    text('THANKS FOR PLAYING!',155,300);
+  
+}
+  else{
+    fill(255)
+    textSize(15);
+    textFont(font);
+    text('THANKS FOR PLAYING!',155,300); }
+  
+  
   
 
 
-textSize(30);
-textFont(font);
-text(points,25,50);
-if (level2points >= 22){
- stage == 4;
- 
 }
-
-
-}
-
-
