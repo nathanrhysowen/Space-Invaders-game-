@@ -18,6 +18,7 @@ let enemymodel2;
 let bonuspoints = 16;
 
 
+
 //preloading sounds, images and fonts//
 function preload(){
  
@@ -165,7 +166,7 @@ textFont(font);
 text('SPACE INVADERS', 20, 100);
 
 //making the text blink and controlling the speed of which it blinks//
-i = i + 1;
+
 if (frameCount % 70<30){  
   fill (50);
   textSize(35);
@@ -473,7 +474,7 @@ function bonuslevel(){
           bonuspoints +=1; //adds one point//
           explosion.play(); //explosion sound//
 
-          if(bonuspoints >=21){
+          if(bonuspoints >=22){
             stage = 5;
           }
 
